@@ -804,11 +804,21 @@ function updateHero(){
 }
 
 function updateNextCheck(){
-  const today=new Date();
-  // Simple biweekly estimate — next Friday 2 weeks out
-  const d=new Date(today);d.setDate(d.getDate()+14);
-  const e=document.getElementById('dash-nc');if(e)e.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  const e2=document.getElementById('dash-pp');if(e2)e2.textContent='Bi-weekly pay cycle';
+  const t=new Date().toISOString().split('T')[0];
+  let cur=null,nxt=null;
+  for(let pp of S_PPS){
+    if(t>=pp.s&&t<=pp.e){cur=pp;}
+    if(pp.c>t&&!nxt){nxt=pp;}
+  }
+  const use=cur&&cur.c>t?cur:nxt;
+  if(!use)return;
+  const d=new Date(use.c+'T12:00:00');
+  const el=document.getElementById('dash-nc');
+  if(el)el.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const s=new Date(use.s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const en=new Date(use.e+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const e2=document.getElementById('dash-pp');
+  if(e2)e2.textContent=`${use.l} · ${s}–${en}`;
 }
 
 function syncPaySettings(){
@@ -867,7 +877,11 @@ function calcDaily(){
   const totalBills=state.bills.reduce((s,b)=>s+parseFloat(b.amt||0),0);
   const billsPP=totalBills/2;
   const left=Math.max(0,take-billsPP);
-  const dL=14;
+  // Find days remaining in current pay period using S_PPS with timezone fix
+  const today=new Date();const t=today.toISOString().split('T')[0];
+  let dL=14;
+  for(let pp of S_PPS){if(t>=pp.s&&t<=pp.e){const en=new Date(pp.e+'T12:00:00');dL=Math.ceil((en-today)/(1000*60*60*24))+1;break;}}
+  dL=Math.max(1,dL);
   const daily=left/dL;
   const da=document.getElementById('daily-allow');if(da)da.textContent='$'+daily.toFixed(0);
   const dd=document.getElementById('dash-daily');if(dd)dd.textContent='$'+daily.toFixed(0);
@@ -1178,12 +1192,32 @@ function updateCredits(){
 const S_MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const S_DY=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const S_PPS=[
-  {s:'2026-03-28',e:'2026-04-10',c:'2026-04-17',l:'PP1',cls:'pp1'},
-  {s:'2026-04-11',e:'2026-04-24',c:'2026-05-01',l:'PP2',cls:'pp2'},
-  {s:'2026-04-25',e:'2026-05-08',c:'2026-05-15',l:'PP3',cls:'pp3'},
-  {s:'2026-05-09',e:'2026-05-22',c:'2026-05-29',l:'PP4',cls:'pp4'},
-  {s:'2026-05-23',e:'2026-06-05',c:'2026-06-12',l:'PP5',cls:'pp1'},
-  {s:'2026-06-06',e:'2026-06-19',c:'2026-06-26',l:'PP6',cls:'pp2'},
+  // CONFIRMED FROM ACTUAL DELTA PAYSTUBS — Period End + 7 days = Check (always Friday)
+  {s:'2025-12-20',e:'2026-01-02',c:'2026-01-09',l:'PP1',cls:'pp1'},
+  {s:'2026-01-03',e:'2026-01-16',c:'2026-01-23',l:'PP2',cls:'pp2'},
+  {s:'2026-01-17',e:'2026-01-30',c:'2026-02-06',l:'PP3',cls:'pp3'},
+  {s:'2026-01-31',e:'2026-02-13',c:'2026-02-20',l:'PP5',cls:'pp1'},
+  {s:'2026-02-14',e:'2026-02-27',c:'2026-03-06',l:'PP6',cls:'pp2'},
+  {s:'2026-02-28',e:'2026-03-13',c:'2026-03-20',l:'PP7',cls:'pp3'},
+  {s:'2026-03-14',e:'2026-03-27',c:'2026-04-03',l:'PP8',cls:'pp4'},
+  {s:'2026-03-28',e:'2026-04-10',c:'2026-04-17',l:'PP9',cls:'pp1'},
+  {s:'2026-04-11',e:'2026-04-24',c:'2026-05-01',l:'PP10',cls:'pp2'},
+  {s:'2026-04-25',e:'2026-05-08',c:'2026-05-15',l:'PP11',cls:'pp3'},
+  {s:'2026-05-09',e:'2026-05-22',c:'2026-05-29',l:'PP12',cls:'pp4'},
+  {s:'2026-05-23',e:'2026-06-05',c:'2026-06-12',l:'PP13',cls:'pp1'},
+  {s:'2026-06-06',e:'2026-06-19',c:'2026-06-26',l:'PP14',cls:'pp2'},
+  {s:'2026-06-20',e:'2026-07-03',c:'2026-07-10',l:'PP15',cls:'pp3'},
+  {s:'2026-07-04',e:'2026-07-17',c:'2026-07-24',l:'PP16',cls:'pp4'},
+  {s:'2026-07-18',e:'2026-07-31',c:'2026-08-07',l:'PP17',cls:'pp1'},
+  {s:'2026-08-01',e:'2026-08-14',c:'2026-08-21',l:'PP18',cls:'pp2'},
+  {s:'2026-08-15',e:'2026-08-28',c:'2026-09-04',l:'PP19',cls:'pp3'},
+  {s:'2026-08-29',e:'2026-09-11',c:'2026-09-18',l:'PP20',cls:'pp4'},
+  {s:'2026-09-12',e:'2026-09-25',c:'2026-10-02',l:'PP21',cls:'pp1'},
+  {s:'2026-09-26',e:'2026-10-09',c:'2026-10-16',l:'PP22',cls:'pp2'},
+  {s:'2026-10-10',e:'2026-10-23',c:'2026-10-30',l:'PP23',cls:'pp3'},
+  {s:'2026-10-24',e:'2026-11-06',c:'2026-11-13',l:'PP24',cls:'pp4'},
+  {s:'2026-11-07',e:'2026-11-20',c:'2026-11-27',l:'PP25',cls:'pp1'},
+  {s:'2026-11-21',e:'2026-12-04',c:'2026-12-11',l:'PP26',cls:'pp2'},
 ];
 const S_WFM={
   '2026-03-30':{type:'reg',start:'03:00',end:'11:30',note:''},'2026-03-31':{type:'reg',start:'03:00',end:'11:30',note:''},
@@ -1296,14 +1330,14 @@ function sRenderPPS(rate){
   const strip=document.getElementById('s-pp-strip');if(!strip)return;strip.innerHTML='';
   const taxR=(parseFloat(document.getElementById('set-tax')?.value)||state.tax||22.5)/100;
   const ded=parseFloat(document.getElementById('set-ded')?.value)||state.ded||1340;
-  const rel=S_PPS.filter(p=>{const s=new Date(p.s),e=new Date(p.e);return s.getMonth()===sCM||e.getMonth()===sCM;}).slice(0,4);
+  const rel=S_PPS.filter(p=>{const s=new Date(p.s+'T12:00:00'),e=new Date(p.e+'T12:00:00');return s.getMonth()===sCM||e.getMonth()===sCM;}).slice(0,4);
   const pcols={pp1:'var(--gold)',pp2:'var(--blue)',pp3:'var(--green)',pp4:'var(--purple)'};
   rel.forEach(p=>{
-    let hrs=0;for(let d=new Date(p.s);d<=new Date(p.e);d.setDate(d.getDate()+1)){const sh=state.shifts?state.shifts[d.toISOString().split('T')[0]]:null;if(sh)hrs+=sHrs(sh);}
+    let hrs=0;for(let d=new Date(p.s+'T12:00:00');d<=new Date(p.e+'T12:00:00');d.setDate(d.getDate()+1)){const sh=state.shifts?state.shifts[d.toISOString().split('T')[0]]:null;if(sh)hrs+=sHrs(sh);}
     const gross=hrs*rate;const take=Math.max(0,gross*(1-taxR)-ded);
-    const chk=new Date(p.c).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const s=new Date(p.s).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const e=new Date(p.e).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const chk=new Date(p.c+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const s=new Date(p.s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const e=new Date(p.e+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
     const card=document.createElement('div');
     card.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:9px;padding:11px;position:relative;overflow:hidden;';
     card.innerHTML=`<div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:${pcols[p.cls]||'var(--gold)'}"></div><div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;margin-bottom:3px;padding-left:8px;">${p.l} · Pay Period</div><div style="font-size:10px;color:var(--text2);margin-bottom:3px;padding-left:8px;">${s} – ${e}</div><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);margin-bottom:5px;padding-left:8px;">💰 Check: ${chk}</div><div style="display:flex;justify-content:space-between;align-items:flex-end;padding-left:8px;"><div><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);">HRS</div><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);line-height:1;">${hrs.toFixed(1)}</div></div><div style="text-align:right;"><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);">TAKE-HOME</div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;color:${pcols[p.cls]||'var(--gold)'};">$${take.toFixed(0)}</div></div></div>`;
