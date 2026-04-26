@@ -482,18 +482,23 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-
 
 <!-- CREDIT -->
 <div id="page-credit" class="page">
-  <div class="sec">Credit Score</div>
+  <div class="sec">Credit Scores · All 3 Bureaus</div>
   <div class="card" style="text-align:center;padding:18px;">
-    <div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:3px;">Current Score · TransUnion</div>
+    <div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:3px;">Your Primary Score · TransUnion</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:76px;line-height:1;" id="score-disp">---</div>
-    <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;">Enter your score below to track it</div>
+    <div style="display:flex;justify-content:center;gap:16px;margin-top:10px;">
+      <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);">TRANSUNION</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--blue);" id="s-tu-disp">---</div></div>
+      <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);">EXPERIAN</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--green);" id="s-exp-disp">---</div></div>
+      <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);">EQUIFAX</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);" id="s-eq-disp">---</div></div>
+    </div>
+    <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:8px;">Enter your scores below. Update monthly.</div>
   </div>
 
   <div class="sec">Update Your Scores</div>
   <div class="card">
-    <div class="cer"><span class="cel">TransUnion Score</span><input class="cei" type="number" id="e-tu" value="" placeholder="e.g. 649" onchange="saveCredits()"></div>
-    <div class="cer"><span class="cel">Experian Score</span><input class="cei" type="number" id="e-exp" value="" placeholder="e.g. 620" onchange="saveCredits()"></div>
-    <div class="cer"><span class="cel">Equifax Score</span><input class="cei" type="number" id="e-eq" value="" placeholder="e.g. 655" onchange="saveCredits()"></div>
+    <div class="cer"><span class="cel">TransUnion Score</span><input class="cei" type="number" id="e-tu" value="" placeholder="e.g. 650" onchange="saveCredits()"></div>
+    <div class="cer"><span class="cel">Experian Score</span><input class="cei" type="number" id="e-exp" value="" placeholder="e.g. 640" onchange="saveCredits()"></div>
+    <div class="cer"><span class="cel">Equifax Score</span><input class="cei" type="number" id="e-eq" value="" placeholder="e.g. 635" onchange="saveCredits()"></div>
     <div class="cer"><span class="cel">Score Goal</span><input class="cei" type="number" id="e-goal" value="720" placeholder="720" onchange="saveCredits()"></div>
   </div>
 
@@ -599,6 +604,8 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-
       <div onclick="sSelType('swap')" id="sbt-swap" style="padding:9px 5px;border-radius:7px;border:1px solid var(--border2);background:var(--dim);cursor:pointer;text-align:center;"><div style="font-size:15px;">🔄</div><div style="font-family:'DM Mono',monospace;font-size:7px;text-transform:uppercase;color:var(--orange);">Swap</div></div>
       <div onclick="sSelType('off')" id="sbt-off" style="padding:9px 5px;border-radius:7px;border:1px solid var(--border2);background:var(--dim);cursor:pointer;text-align:center;"><div style="font-size:15px;">❌</div><div style="font-family:'DM Mono',monospace;font-size:7px;text-transform:uppercase;color:var(--red);">Give Away</div></div>
       <div onclick="sSelType('vacb')" id="sbt-vacb" style="padding:9px 5px;border-radius:7px;border:1px solid var(--border2);background:var(--dim);cursor:pointer;text-align:center;grid-column:1/-1;"><span style="font-size:13px;">✈️</span><span style="font-family:'DM Mono',monospace;font-size:7px;text-transform:uppercase;color:var(--purple);margin-left:5px;">Vacation Block (VACB)</span></div>
+      <div onclick="sSelType('dbl')" id="sbt-dbl" style="padding:9px 5px;border-radius:7px;border:1px solid rgba(0,229,160,0.3);background:rgba(0,229,160,0.08);cursor:pointer;text-align:center;grid-column:1/-1;"><span style="font-size:13px;">2️⃣</span><span style="font-family:'DM Mono',monospace;font-size:7px;text-transform:uppercase;color:var(--green);margin-left:5px;">Double Shift — Add 2nd block</span></div>
+      <div onclick="sSelType('ot')" id="sbt-ot" style="padding:9px 5px;border-radius:7px;border:1px solid rgba(255,85,85,0.3);background:rgba(255,85,85,0.08);cursor:pointer;text-align:center;grid-column:1/-1;"><span style="font-size:13px;">💰</span><span style="font-family:'DM Mono',monospace;font-size:7px;text-transform:uppercase;color:var(--red);margin-left:5px;" id="sbt-ot-label">Overtime (OT) — 1.5× Rate</span></div>
     </div>
     <div style="display:flex;gap:7px;margin-bottom:11px;">
       <div style="flex:1;"><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Start</div><input type="time" id="s-start" value="03:00" style="background:var(--dim);border:1px solid var(--border2);border-radius:7px;padding:8px 10px;color:var(--text);font-size:12px;width:100%;outline:none;"></div>
@@ -1162,6 +1169,9 @@ function updateCredits(){
   const s=parseInt(state.credits?.tu)||0;
   const el=document.getElementById('score-disp');
   if(el){el.textContent=s||'---';el.style.color=s>=720?'var(--green)':s>=680?'var(--gold)':s>0?'var(--orange)':'var(--muted)';}
+  const tu=document.getElementById('s-tu-disp');if(tu)tu.textContent=state.credits?.tu||'---';
+  const exp=document.getElementById('s-exp-disp');if(exp)exp.textContent=state.credits?.exp||'---';
+  const eq=document.getElementById('s-eq-disp');if(eq)eq.textContent=state.credits?.eq||'---';
 }
 
 // ===== SCHEDULE =====
@@ -1250,6 +1260,26 @@ function sRenderCal(){
       bl.textContent=shift.type==='vacb'?'✈️ VACB':`${lbs[shift.type]} ${shift.start}–${shift.end}${hrs>0?` (${hrs}h)`:''}`;
       cell.appendChild(bl);
       if(!oth){if(shift.type==='reg'){rD++;rH+=hrs;}else if(shift.type==='extra'){eD++;eH+=hrs;}else if(shift.type==='holiday'){hD++;hH+=hrs;}}
+      // Double shift block
+      if(shift.dbl){
+        const bl2=document.createElement('div');
+        bl2.style.cssText='border-radius:3px;padding:2px 4px;margin-bottom:2px;font-size:7px;font-family:DM Mono,monospace;font-weight:600;background:rgba(0,229,160,0.2);color:var(--green);border-left:2px solid var(--green);line-height:1.3;';
+        const[sh2,sm2]=shift.dbl.start.split(':').map(Number);const[eh2,em2]=shift.dbl.end.split(':').map(Number);
+        let h2=(eh2*60+em2-sh2*60-sm2)/60;if(h2<0)h2+=24;const hrs2=Math.max(0,h2-0.5);
+        bl2.textContent=`2ND ${shift.dbl.start}–${shift.dbl.end}${hrs2>0?` (${hrs2}h)`:''}`;
+        cell.appendChild(bl2);
+        if(!oth)rH+=hrs2;
+      }
+      // OT block
+      if(shift.ot){
+        const blOT=document.createElement('div');
+        blOT.style.cssText='border-radius:3px;padding:2px 4px;margin-bottom:2px;font-size:7px;font-family:DM Mono,monospace;font-weight:600;background:rgba(255,85,85,0.18);color:var(--red);border-left:2px solid var(--red);line-height:1.3;';
+        const otH=parseFloat(shift.ot.hours)||0;
+        const otEarn=(otH*rate*1.5).toFixed(0);
+        blOT.textContent=`💰 OT ${shift.ot.start}–${shift.ot.end} (${otH}h · $${otEarn})`;
+        cell.appendChild(blOT);
+        if(!oth)rH+=otH;
+      }
     }
     cell.onclick=()=>sOpenMo(dk,yr,mo,day);
     g.appendChild(cell);
@@ -1305,20 +1335,43 @@ function sOpenMo(dk,yr,mo,day){
 
 function sSelType(t){
   sSelShiftType=t;
-  ['reg','extra','holiday','short','swap','off','vacb'].forEach(tp=>{const b=document.getElementById('sbt-'+tp);if(b)b.style.borderWidth='1px';});
+  ['reg','extra','holiday','short','swap','off','vacb','dbl','ot'].forEach(tp=>{const b=document.getElementById('sbt-'+tp);if(b)b.style.borderWidth='1px';});
   const b=document.getElementById('sbt-'+t);if(b)b.style.borderWidth='2px';
-  const times={reg:['03:00','11:30'],extra:['03:00','11:30'],holiday:['03:00','11:30'],short:['03:00','09:30'],swap:['03:00','11:30'],off:['03:00','11:30'],vacb:['03:00','11:30']};
+  const times={reg:['03:00','11:30'],extra:['03:00','11:30'],holiday:['03:00','11:30'],short:['03:00','09:30'],swap:['03:00','11:30'],off:['03:00','11:30'],vacb:['03:00','11:30'],dbl:['15:00','23:30'],ot:['11:30','15:30']};
   if(times[t]){const ss=document.getElementById('s-start');if(ss)ss.value=times[t][0];const se=document.getElementById('s-end');if(se)se.value=times[t][1];}
+  // Update OT label with current rate
+  const rate=parseFloat(document.getElementById('set-rate')?.value)||state.rate||40.50;
+  const otLbl=document.getElementById('sbt-ot-label');
+  if(otLbl)otLbl.textContent=`Overtime (OT) — $${(rate*1.5).toFixed(2)}/hr · 1.5×`;
 }
 
 function sSaveShift(){
   if(!sSelShiftType||!sSelDate)return;
   if(!state.shifts)state.shifts={};
   const ss=document.getElementById('s-start');const se=document.getElementById('s-end');const sn=document.getElementById('s-note');
-  state.shifts[sSelDate]={type:sSelShiftType,start:ss?ss.value:'03:00',end:se?se.value:'11:30',note:sn?sn.value:''};
+  const existing=state.shifts[sSelDate]||{};
+  if(sSelShiftType==='dbl'){
+    existing.dbl={start:ss?ss.value:'15:00',end:se?se.value:'23:30',note:sn?sn.value:''};
+    state.shifts[sSelDate]=existing;
+  } else if(sSelShiftType==='ot'){
+    const s=ss?ss.value:'11:30';const e=se?se.value:'15:30';
+    const[sh,sm]=s.split(':').map(Number);const[eh,em]=e.split(':').map(Number);
+    let h=(eh*60+em-sh*60-sm)/60;if(h<0)h+=24;const hrs=Math.max(0,h-0.5).toFixed(1);
+    existing.ot={start:s,end:e,hours:hrs,note:sn?sn.value:''};
+    state.shifts[sSelDate]=existing;
+  } else {
+    state.shifts[sSelDate]={type:sSelShiftType,start:ss?ss.value:'03:00',end:se?se.value:'11:30',note:sn?sn.value:'',...(existing.dbl?{dbl:existing.dbl}:{}),...(existing.ot?{ot:existing.ot}:{})};
+  }
   saveState();sCloseMo();sRenderCal();
 }
-function sClearShift(){if(sSelDate&&state.shifts)delete state.shifts[sSelDate];saveState();sCloseMo();sRenderCal();}
+function sClearShift(){
+  if(sSelDate&&state.shifts){
+    if(sSelShiftType==='ot'){delete state.shifts[sSelDate].ot;}
+    else if(sSelShiftType==='dbl'){delete state.shifts[sSelDate].dbl;}
+    else{delete state.shifts[sSelDate];}
+  }
+  saveState();sCloseMo();sRenderCal();
+}
 function sCloseMo(){const m=document.getElementById('s-modal');if(m)m.style.display='none';}
 document.getElementById('s-modal').addEventListener('click',function(e){if(e.target===this)sCloseMo();});</script>
 
