@@ -1253,7 +1253,8 @@ let sCY=2026,sCM=3,sSelDate=null,sSelShiftType=null;
 function sDK(y,m,d){return`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
 function sGetPP(k){for(let p of S_PPS){if(k>=p.s&&k<=p.e)return p;}return null;}
 function sHrs(s){
-  if(!s||s.type==='off'||s.type==='vacb')return 0;
+  if(!s||s.type==='off')return 0;
+  // VACB = paid vacation — counts at full rate
   const[sh,sm]=s.start.split(':').map(Number);const[eh,em]=s.end.split(':').map(Number);
   let h=(eh*60+em-sh*60-sm)/60;if(h<0)h+=24;return Math.max(0,h-0.5);
 }
@@ -1291,7 +1292,8 @@ function sRenderCal(){
       const bl=document.createElement('div');
       bl.style.cssText=`border-radius:3px;padding:2px 4px;margin-bottom:2px;font-size:7px;font-family:'DM Mono',monospace;font-weight:600;background:${colors[shift.type]||'var(--dim)'};color:${tc2[shift.type]||'var(--muted)'};border-left:2px solid ${tc2[shift.type]||'var(--muted)'};line-height:1.3;`;
       const hrs=sHrs(shift);
-      bl.textContent=shift.type==='vacb'?'✈️ VACB':`${lbs[shift.type]} ${shift.start}–${shift.end}${hrs>0?` (${hrs}h)`:''}`;
+      bl.textContent=shift.type==='vacb'?`✈️ VACB ${shift.start}–${shift.end}${hrs>0?` (${hrs}h · $${(hrs*rate).toFixed(0)})`:''}`:
+        `${lbs[shift.type]} ${shift.start}–${shift.end}${hrs>0?` (${hrs}h)`:''}`;
       cell.appendChild(bl);
       if(!oth){if(shift.type==='reg'){rD++;rH+=hrs;}else if(shift.type==='extra'){eD++;eH+=hrs;}else if(shift.type==='holiday'){hD++;hH+=hrs;}}
       // Double shift block
